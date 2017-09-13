@@ -453,10 +453,32 @@ def testSpin( robot ):
         robot.update( cmd=movePCMDCmd( False, 0, 0, 0, 0 ) )
 
 
+def myFirstFunction(robot):
+
+    robot.videoEnable()
+    try:
+        print 'Start function now'
+        ####### Start code here #####
+
+        robot.takeoff()
+        robot.land()
+
+        ###### Code end here ########
+        #############################
+
+    except ManualControlException, e:
+        print "ManualControlException"
+        if robot.flyingState is None or robot.flyingState == 1: # taking off
+            # unfortunately it is not possible to land during takeoff for ARDrone3 :(
+            robot.emergency()
+        robot.land()
+    return
+
+
 if __name__ == "__main__":
-    if len(sys.argv) < 2:
-        print __doc__
-        sys.exit(2)
+    # if len(sys.argv) < 2:
+    #     print __doc__
+    #     sys.exit(2)
     metalog=None
     if len(sys.argv) > 2:
         metalog = MetaLog( filename=sys.argv[2] )
@@ -464,17 +486,24 @@ if __name__ == "__main__":
         disableAsserts()
 
     robot = Bebop( metalog=metalog )
-#    testCamera( robot )
-#    testEmergency( robot )
-#    testTakeoff( robot )
-#    testManualControlException( robot )
-#    testTakePicture( robot )
+    
+    #############################    
+    ## Functions for bebop
+    # testCamera( robot )
+    # testEmergency( robot )
+    # testTakeoff( robot )
+    # testManualControlException( robot )
+    # testTakePicture( robot )
     # testFlying( robot )
-    testFlyForward( robot )
+    # testFlyForward( robot )
     # testSample( robot )
     # testVideoProcessing( robot )
     # testVideoRecording( robot )
-#    testSpin( robot )
+    # testSpin( robot )    
+
+    myFirstFunction(robot)
+
+    ############################
     print "Battery:", robot.battery
 
 # vim: expandtab sw=4 ts=4 

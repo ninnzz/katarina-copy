@@ -1,6 +1,8 @@
 Katarina
 =======
 
+**THIS IS ONLY A COPY for discussion purposes, you can check the original repo here https://github.com/robotika/katarina*
+
 Parrot drone Bebop
 
 * autonomous drone controlled via Python
