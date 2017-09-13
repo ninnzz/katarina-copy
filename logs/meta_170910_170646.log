@@ -1,0 +1,5 @@
+['bebop.py']
+navdata: logs/navdata_170910_170646.bin
+cmd: logs/cmd_170910_170646.bin
+console: logs/console_170910_170646.txt
+now: datetime.datetime(2017, 9, 10, 17, 6, 46, 519898)

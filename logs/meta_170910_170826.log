@@ -1,0 +1,5 @@
+['kill.py']
+navdata: logs/navdata_170910_170826.bin
+cmd: logs/cmd_170910_170826.bin
+console: logs/console_170910_170826.txt
+now: datetime.datetime(2017, 9, 10, 17, 8, 26, 515479)
