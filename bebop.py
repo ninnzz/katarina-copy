@@ -234,6 +234,7 @@ class Bebop:
         print "Wait", duration
         assert self.time is not None
         startTime = self.time
+        print 'Start time: {}'.format(startTime)
         while self.time-startTime < duration:
             self.update()
 
@@ -459,19 +460,27 @@ def myFirstFunction(robot):
     try:
         print 'Start function now'
         ####### Start code here #####
-
         robot.takeoff()
-        robot.land()
+        robot.wait(5)
 
+        print 'GPS {}'.format(robot.positionGPS)
+        print 'Pos {}'.format(robot.position)
+        print 'Alt {}'.format(robot.altitude)
+        robot.wait(5)
+
+        print 'GPS {}'.format(robot.positionGPS)
+        print 'Pos {}'.format(robot.position)
+        print 'Alt {}'.format(robot.altitude)
+        robot.land()
         ###### Code end here ########
         #############################
 
     except ManualControlException, e:
         print "ManualControlException"
-        if robot.flyingState is None or robot.flyingState == 1: # taking off
-            # unfortunately it is not possible to land during takeoff for ARDrone3 :(
-            robot.emergency()
-        robot.land()
+        # if robot.flyingState is None or robot.flyingState == 1: # taking off
+        #     # unfortunately it is not possible to land during takeoff for ARDrone3 :(
+        #     robot.emergency()
+        # robot.land()
     return
 
 
