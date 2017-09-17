@@ -27,6 +27,9 @@ DISCOVERY_PORT = 44444
 NAVDATA_PORT = 43210 # d2c_port
 COMMAND_PORT = 54321 # c2d_port
 
+LEFT_TURN = -90
+RIGHT_TURN = 90
+
 class Bebop:
     def __init__( self, metalog=None, onlyIFrames=True ):
         if metalog is None:
@@ -454,6 +457,13 @@ def testSpin( robot ):
         robot.update( cmd=movePCMDCmd( False, 0, 0, 0, 0 ) )
 
 
+def moveForward(robot, distance):
+    MULT = 4
+    LOOP = distance / 4
+    for i in xrange(LOOP):
+        robot.update( cmd=movePCMDCmd( True, 0, MULT, 0, 0 ) )
+
+
 def myFirstFunction(robot):
 
     robot.videoEnable()
@@ -461,26 +471,84 @@ def myFirstFunction(robot):
         print 'Start function now'
         ####### Start code here #####
         robot.takeoff()
-        robot.wait(5)
-
+        robot.flyToAltitude(10)   
         print 'GPS {}'.format(robot.positionGPS)
         print 'Pos {}'.format(robot.position)
         print 'Alt {}'.format(robot.altitude)
-        robot.wait(5)
-
+        [lat, lon, height]
+        lat = robot.positionGPS[0]
+        lon = robot.positionGPS[1]
+        
+        moveForward(robot, 2000)
+        robot.update( cmd=movePCMDCmd( True, 0, 0, LEFT_TURN, 0 ) )
+        robot.wait(2)
+        robot.update( cmd=movePCMDCmd( True, 0, 0, LEFT_TURN, 0 ) )
+        robot.wait(2)
         print 'GPS {}'.format(robot.positionGPS)
         print 'Pos {}'.format(robot.position)
         print 'Alt {}'.format(robot.altitude)
+        moveForward(robot, 2000)
         robot.land()
         ###### Code end here ########
         #############################
 
     except ManualControlException, e:
         print "ManualControlException"
-        # if robot.flyingState is None or robot.flyingState == 1: # taking off
-        #     # unfortunately it is not possible to land during takeoff for ARDrone3 :(
-        #     robot.emergency()
-        # robot.land()
+        if robot.flyingState is None or robot.flyingState == 1: # taking off
+            robot.emergency()
+            # unfortunately it is not possible to land during takeoff for ARDrone3 :(
+        robot.land()
+    return
+
+
+def surv2(robot):
+    robot.videoEnable()
+    TURNS = 3
+    BASE_WIDTH = 600
+    BASE_HEIGHT = 600
+
+    INCREMENT = 300
+
+    try:
+        robot.trim()
+        robot.takeoff()
+        for i in xrange(20):
+            robot.update( movePCMDCmd( True, 0, 0, 0, 40) )
+
+        for i in xrange(TURNS):
+            total_base = INCREMENT * 2 * i
+            offset = INCREMENT * (i + 1)
+            robot.flyToAltitude( 5 )
+            moveForward(robot, BASE_HEIGHT + total_base)
+            robot.update( cmd=movePCMDCmd( True, 0, 0, LEFT_TURN, 0 ) )
+            print 'left 1'
+            robot.wait(1)
+            moveForward(robot, BASE_WIDTH + total_base)
+            robot.update( cmd=movePCMDCmd( True, 0, 0, LEFT_TURN, 0 ) )
+            print 'left 2'
+            robot.wait(1)
+            moveForward(robot, BASE_HEIGHT + total_base + offset)
+            robot.update( cmd=movePCMDCmd( True, 0, 0, LEFT_TURN, 0 ) )
+            print 'left 3'
+            robot.wait(1)
+            moveForward(robot, BASE_WIDTH + total_base + offset)
+            robot.update( cmd=movePCMDCmd( True, 0, 0, LEFT_TURN, 0 ) )
+            print 'left 4'
+            robot.wait(1)
+            print 'Loop # {}'.format(i + 1)
+            print 'GPS {}'.format(robot.positionGPS)
+            print 'Pos {}'.format(robot.position)
+            print 'Alt {}'.format(robot.altitude)
+
+        robot.land()
+
+    except ManualControlException, e:
+        print "ManualControlException"
+        if robot.flyingState is None or robot.flyingState == 1: # taking off
+            # unfortunately it is not possible to land during takeoff for ARDrone3 :(
+            robot.emergency()
+        robot.land()
+
     return
 
 
@@ -510,7 +578,7 @@ if __name__ == "__main__":
     # testVideoRecording( robot )
     # testSpin( robot )    
 
-    myFirstFunction(robot)
+    surv2(robot)
 
     ############################
     print "Battery:", robot.battery
